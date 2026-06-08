@@ -246,8 +246,11 @@ function computeTargets(p){
 function consumed(){ return {calories:sum(state.meals,"calories"),protein:sum(state.meals,"protein"),carbs:sum(state.meals,"carbs"),fat:sum(state.meals,"fat"),water:state.water}; }
 function progressPct(){ const p=state.profile,l=p.start_weight-p.weight,t=p.start_weight-p.target_weight; return t>0?clamp(l/t*100,0,100):0; }
 function motivational(){ const pct=progressPct(); if(pct<=0)return "Hoy es el día uno. <b>Sin prisa, sin pausa.</b>"; if(pct<35)return "Ya estás en marcha. <b>La constancia gana siempre.</b>"; if(pct<70)return "Vas más de medio camino. <b>Mantén el rumbo.</b>"; if(pct<100)return "Estás muy cerca. <b>Sigue así, sin soltar.</b>"; return "Objetivo cumplido. <b>Ahora toca sostenerlo.</b>"; }
-function stats(){ if(!state.profile.stats) state.profile.stats={streak:0,best:0,last_close:null,achievements:[]}; return state.profile.stats; }
-function prefs(){ if(!state.profile.prefs) state.profile.prefs={dark:false,reminders:false}; return state.profile.prefs; }
+function stats(){ const p=state.profile; if(!p.stats||typeof p.stats!=="object") p.stats={}; const s=p.stats;
+  if(typeof s.streak!=="number") s.streak=0; if(typeof s.best!=="number") s.best=0;
+  if(s.last_close===undefined) s.last_close=null; if(!Array.isArray(s.achievements)) s.achievements=[]; return s; }
+function prefs(){ const p=state.profile; if(!p.prefs||typeof p.prefs!=="object") p.prefs={}; const r=p.prefs;
+  if(typeof r.dark!=="boolean") r.dark=false; if(typeof r.reminders!=="boolean") r.reminders=false; return r; }
 
 /* 4) DATOS DEMO ------------------------------------------------------------- */
 function seedDemo(){
